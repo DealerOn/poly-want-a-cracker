@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
 
 <!--
 `<PolyChatLog>` is a list style log of chat messages
@@ -13,8 +16,16 @@
             }
         </style>
 
-        
-
+        <ul>
+            <template is="dom-repeat" items="{{messages}}">
+                <li>
+                    [[item.message]]
+                </li>
+            </template>
+        </ul>
+        <paper-input label="What's going on?" value={{currentMessage}}>
+            <paper-button raised on-tap="sendMessage" slot="suffix">Send</paper-button>
+        </paper-input>
     </template>
 
     <script>
@@ -24,7 +35,18 @@
 
             static get properties() {
                 return {
-                    
+                    messages:{
+                        type: Array,
+                        value: []
+                    },
+                    currentMessage: {
+                        type: String,
+                        value: ""
+                    },
+                    socket: {
+                        type: Object,
+                        value: {}
+                    }
                 };
             }
 
@@ -34,10 +56,38 @@
 
             ready() {
                 super.ready();
+                let room = "sample";
+                let baseUrl = "http://localhost:8082";
+                let url = baseUrl + "/api/rooms/" + room;
 
                 Polymer.RenderStatus.afterNextRender(this, function() {
-                    
+                    fetch(url, {method: 'put'})
+                    .then(res =>  {
+                        if (res.status == 200) {
+                            this.socket = io.connect(baseUrl).io.socket('/rooms/' + room);
+                            fetch(url)
+                            .then(res => res.json())
+                            .then(room => {
+                                // push each current message onto the stack.
+                                room.messages.forEach(msg => this.addMessage(msg));
+                                // subscribe to new messages
+                                this.socket.on("new", msg => this.addMessage(msg));
+                            })
+                        } else {
+                            console.error("Something went wrong. Could not reach the server: " + res);
+                        }
+                    });
                 });
+            }
+
+            addMessage(message) {
+                this.push('messages', message);
+            }
+
+            sendMessage(event)  {
+                let messageText = this.currentMessage;
+                this.socket.emit("send", messageText);
+                this.currentMessage = "";
             }
 
         }
