@@ -42,22 +42,33 @@ Step 2:
   * Update the fallback-selection of the iron-pages element to include the 'my-' so the 404 fallback continues to work. 
   * Update the iron-selector href values to include the 'my-' so they continue to work. 
 
-  Step 3:
-  * Import paper-input
-    * bower install --save paper-input
-    * Select the 2.0 preview versions of the dependencies if prompted. 
-  * Import paper-button
-    * bower install --save paper-button
-    * Select the 2.0 preview versions of the dependencies if prompted. 
-  * Add import reference to paper-input and paper-button. 
-  * Add script reference to socket.io client
-  * Update Template to include a dom-repeat for the messages property (we'll add that in a moment.)
-  * Add a paper-input element to accept the text we'll be typing in. 
-  * Add a paper-button to the input in the suffix slot to allow submitting the content. 
-  * Add a Messages property of type Array, a currentMessage property of type String, and a socket property of type Object to the poly-chatlog element. 
-  * Add the logic to the ready() method to connect to the chat server and push the messages to the room. 
-  * create an addMessage(message) function and a sendMessage function for pushing messages onto the message property and emitting messages to the socket.io server respectively. 
+Step 3:
+* Import paper-input
+  * bower install --save paper-input
+  * Select the 2.0 preview versions of the dependencies if prompted. 
+* Import paper-button
+  * bower install --save paper-button
+  * Select the 2.0 preview versions of the dependencies if prompted. 
+* Add import reference to paper-input and paper-button. 
+* Add script reference to socket.io client
+* Update Template to include a dom-repeat for the messages property (we'll add that in a moment.)
+* Add a paper-input element to accept the text we'll be typing in. 
+* Add a paper-button to the input in the suffix slot to allow submitting the content. 
+* Add a Messages property of type Array, a currentMessage property of type String, and a socket property of type Object to the poly-chatlog element. 
+* Add the logic to the ready() method to connect to the chat server and push the messages to the room. 
+* create an addMessage(message) function and a sendMessage function for pushing messages onto the message property and emitting messages to the socket.io server respectively. 
 
-
-
+Step 4:
+* Create a new component and name it PolyChatBubble and set the dom module id to poly-chatbubble. 
+* Add a userId property of type String and create a div in the template with ID set to the userId property and class of message-bubble. 
+* Create a few slots in the poly-chatbubble for a prefix, suffix, and the catch-all slot. 
+* Update the poly-chatlog template to replace the contents of the list item with a poly-chatbubble, setting the user-id (because camel cased property names become hyphenated externally) property of the bubble to the item.from property of the repeated item.
+* Set the contents of the poly-chatbubble to be the item.message property. 
+* Import paper-item
+  * bower install --save paper-item
+  * Select the 2.0 preview versions of the dependencies if prompted. 
+* Import paper-listbox
+  * bower install --save paper-listbox
+  * Select the 2.0 preview versions of the dependencies if prompted. 
+* Update the poly-chatlog to utilize the paper-listbox and paper-item for the messages. 
 

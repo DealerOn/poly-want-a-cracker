@@ -1,0 +1,57 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+
+<!--
+`<PolyChatCubble>` is a message bubble for Poly Want A Cracker chat application
+
+@element PolyChatCubble
+-->
+<dom-module id="poly-chatbubble">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+            .message-bubble {
+                
+            }
+        </style>
+
+        <div id="{{userId}}" class="message-bubble">
+            <slot name="prefix" slot="prefix"></slot>
+            <slot></slot>
+            <slot name="suffix" slot="suffix"></slot>
+        </div>
+
+    </template>
+
+    <script>
+        class PolyChatBubbleElement extends Polymer.Element {
+
+            static get is() { return 'poly-chatbubble'; }
+
+            static get properties() {
+                return {
+                    userId : {
+                        type: String,
+                        value: ""
+                    }
+                };
+            }
+
+            constructor() {
+                super();
+            }
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function() {
+                    
+                });
+            }
+        }
+
+        window.customElements.define(PolyChatBubbleElement.is, PolyChatBubbleElement);
+    </script>
+</dom-module>
